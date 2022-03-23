@@ -1,16 +1,54 @@
+# Introduction
+This script allows to do some image preprocessing activities on sonography images taken from Toshiba/Canon Aplio 500 sonography devices.
+
+The actions that can be performed are:
+- anonimize;
+- crop;
+- fill area inside the trace;
+- measure area;
+- generate trimap images (visible and binary formats).
+
 # Setup Environment
 
-Windows
+## Linux and MacOS
 ```sh
->python -m venv env
->.\env\Scripts\activate
->python -m pip install --upgrade pip
->pip install -r requirements.txt
+$ python -m venv env
+$ source env/bin/activate
+$ python -m pip install --upgrade pip
+$ pip install -r requirements.txt
+```
+
+## Windows
+```sh
+> python -m venv env
+> .\env\Scripts\activate
+> python -m pip install --upgrade pip
+> pip install -r requirements.txt
+```
+
+# How to use it
+Copy all images in one folder, than call the script with the appropriate parameters. To get help from the script just type:
+```sh
+$ python gg_prepr.py -h
+```
+
+## Examples
+
+```sh
+$ python gg_prepr.py anonymize -i images_original -o images_anonym -x=0 -y=0 -w=640 -hi=100
+
+$ python gg_prepr.py crop -i images_original -o images_cropped -x=330 -y=165 -w=300 -hi=300
+
+$ python gg_prepr.py mask -i images_cropped -o images_masks
+
+$ python gg_prepr.py measure -i images_masks -mf measures.txt
+
+$ python gg_prepr.py trimap -i images_masks -o images_trimap
 ```
 
 # License
 
-Copyright (C) 2022 Giansalvo Gusinu <profgusinu@gmail.com>
+Copyright (C) 2022 Giansalvo Gusinu
 
 Permission is hereby granted, free of charge, to any person obtaining a 
 copy of this software and associated documentation files (the "Software"),
