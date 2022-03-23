@@ -2,7 +2,7 @@
 This script allows to do some image preprocessing activities on sonography images taken from Toshiba/Canon Aplio 500 sonography devices.
 
 The actions that can be performed are:
-- anonimize;
+- anonymize;
 - crop;
 - fill area inside the trace;
 - measure area;
