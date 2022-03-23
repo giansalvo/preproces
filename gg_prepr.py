@@ -29,13 +29,17 @@ import numpy as np
 
 # COPYRIGHT NOTICE AND PROGRAM VERSION
 COPYRIGHT_NOTICE = "Copyright (C) 2022 Giansalvo Gusinu <profgusinu@gmail.com>"
-PROGRAM_VERSION = "0.5"
+PROGRAM_VERSION = "1.0"
 
 # CONSTANTS
 CROP_X_DEFAULT = 330
 CROP_Y_DEFAULT = 165
 CROP_W_DEFAULT = 300
 CROP_H_DEFAULT = 300
+ANONYMIZE_X_DEFAULT = 0
+ANONYMIZE_Y_DEFAULT = 0
+ANONYMIZE_W_DEFAULT = 1240
+ANONYMIZE_H_DEFAULT = 100
 
 # COLOUR MASKS
 cyan_lower = np.array([34, 85, 30])
@@ -53,10 +57,11 @@ def measure_area(image_rgb, color_rgb):
     return result
 
 
-def anonimize(image):
+def anonimize(image, x=ANONYMIZE_X_DEFAULT, y=ANONYMIZE_Y_DEFAULT, 
+                w=ANONYMIZE_W_DEFAULT, h=ANONYMIZE_H_DEFAULT):
     # Draw black background rectangle in the upper region of the image
-    _, w, _ = image.shape
-    x, y, w, h = 0, 0, w, 40
+    # _, w, _ = image.shape
+    # x, y, w, h = 0, 0, w, 40
     cv2.rectangle(image, (x, x), (x + w, y + h), (0, 0, 0), -1)
     return image
 
@@ -263,6 +268,18 @@ def generate_trimap(fname, erosion_iter=6, dilate_iter=6):
     labels[trimap == 255] = 2  # foreground
     return trimap, labels
 
+def anonymize_all_files(input_directory, output_directory, 
+                x=ANONYMIZE_X_DEFAULT, y=ANONYMIZE_X_DEFAULT, 
+                w=ANONYMIZE_W_DEFAULT, h=ANONYMIZE_H_DEFAULT):
+    ext = ('.jpg', '.jpeg', '.png')
+    for fname in os.listdir(input_directory):
+        if fname.endswith(ext):
+            fn, fext = os.path.splitext(os.path.basename(fname))
+            img = cv2.imread(input_directory + "/" + fname)
+            img = anonimize(img, x, y, w, h)
+            cv2.imwrite(output_directory + "/" + fn + fext, img, [int(cv2.IMWRITE_JPEG_QUALITY), 100])  # TODO check JPEG/PNG
+            # cv2.imwrite(output_directory + "/" + fn + ".png", img,  [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+    return
 
 def crop_all_files(input_directory, output_directory, 
                 x=CROP_X_DEFAULT, y=CROP_X_DEFAULT, w=CROP_W_DEFAULT, h=CROP_H_DEFAULT):
@@ -302,6 +319,7 @@ def measure_all_files(input_directory, output_file, coeff_m=1.0, coeff_q=0.0):
 
 
 #  main
+action_anonymize = "anonymize"
 action_crop = "crop"
 action_mask = "mask"
 action_measure = "measure"
@@ -310,6 +328,9 @@ action_trimap = "trimap"
 parser = argparse.ArgumentParser(
     description=COPYRIGHT_NOTICE,
     epilog="Examples:\n"
+           "         >python %(prog)s anonymize -i images_original -o images_anonym\n"
+           "         >python %(prog)s anonymize -i images_original -o images_anonym -x=0 -y=0 -w=640 -hi=100\n"
+           "\n"
            "         >python %(prog)s crop -i images_original -o images_cropped\n"
            "         >python %(prog)s crop -i images_original -o images_cropped -x=330 -y=165 -w=300 -hi=300\n"
            "\n"
@@ -324,15 +345,15 @@ group = parser.add_mutually_exclusive_group()
 group.add_argument("-v", "--verbose", action="store_true")
 group.add_argument("-q", "--quiet", action="store_true")
 parser.add_argument("action", help="The action: " 
-        + action_crop + ", " + action_mask + ", " + action_measure + ", " + action_trimap,
-        choices=(action_crop, action_mask, action_measure, action_trimap))
+        + action_anonymize + action_crop + ", " + action_mask + ", " + action_measure + ", " + action_trimap,
+        choices=(action_anonymize, action_crop, action_mask, action_measure, action_trimap))
 parser.add_argument('-i', '--input_dir', required=True, help="The directory with the input images")
 parser.add_argument("-o", "--output_dir", required=False, help="The directory with the resulting images")
 parser.add_argument("-mf", "--measure_file", required=False, help="The file where to store measures")
-parser.add_argument("-x", nargs="?", type=int, default=330, help="The point of coordinate (x, y) is used as starting point when cropping")
-parser.add_argument("-y", nargs="?", type=int, default=165, help="The point of coordinate (x, y) is used as starting point when cropping")
-parser.add_argument("-w", "--weigth", nargs="?", type=int, default=300, help="The width of the resulting image after cropping")
-parser.add_argument("-hi", "--heigth", nargs="?", type=int, default=300, help="The heigth of the resulting image after cropping")
+parser.add_argument("-x", nargs="?", type=int, help="The starting point (x, y) used for: anonymize, crop.")
+parser.add_argument("-y", nargs="?", type=int, help="The starting point (x, y) used for: anonymize, crop.")
+parser.add_argument("-w", "--weigth", nargs="?", type=int, help="The width parameter is used for: anonymize, crop.")
+parser.add_argument("-hi", "--heigth", nargs="?", type=int, help="The heigth parameter is used for: anonymize, crop.")
 args = parser.parse_args()
 
 input_dir = args.input_dir
@@ -347,7 +368,7 @@ if args.action is None:
 if not os.path.isdir(input_dir):
     print("Error: input directory " + input_dir + " doesn't exist!")    
     exit()
-if args.action == action_crop or args.action == action_mask or args.action == action_trimap:
+if args.action == action_anonymize or args.action == action_crop or args.action == action_mask or args.action == action_trimap:
     if args.output_dir is None:
         parser.error("Missing output directory.")
     if os.path.isdir(output_dir):
@@ -356,7 +377,26 @@ if args.action == action_crop or args.action == action_mask or args.action == ac
         print("Creating output directory " + output_dir)
         os.mkdir(output_dir)
 
-if args.action == action_crop:
+if args.action == action_anonymize:
+    print("Generating anonymized images for all files in the input directory...")
+    if args.x is None:
+        x_coord = ANONYMIZE_X_DEFAULT
+    else:
+        x_coord = args.x
+    if args.y is None:
+        y_coord = ANONYMIZE_Y_DEFAULT
+    else:
+        y_coord = args.y
+    if args.weigth is None:
+        weigth = ANONYMIZE_W_DEFAULT
+    else:
+        weigth = args.weigth
+    if args.heigth is None:
+        heigth = ANONYMIZE_H_DEFAULT
+    else:
+        heigth = args.heigth
+    anonymize_all_files(input_dir, output_dir, x_coord, y_coord, weigth, heigth)
+elif args.action == action_crop:
     print("Generating cropped images for all files in the input directory...")
     if args.x is None:
         x_coord = CROP_X_DEFAULT
@@ -388,11 +428,3 @@ elif args.action == action_trimap:
     generate_trimaps_all_files(input_dir, output_dir)
 
 print("Program ended.")
-
-#  1. crop
-#  2. manually select images: i.e. separate images with no neurologist's traces
-#  3. basic segmentation: green on black visible mask
-#  4. manual adjustments needed here: i.e. remove unwanted artifacts
-#  5. trimap: visible, binary
-#
-#   TODO measure area TODO define output format (jason? xml? csv?); define input coeff
