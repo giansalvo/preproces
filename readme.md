@@ -46,6 +46,15 @@ $ python gg_prepr.py measure -i images_masks -mf measures.txt
 $ python gg_prepr.py trimap -i images_masks -o images_trimap
 ```
 
+# Workflow
+This is an example of suggested workflow that you can adapt to your needs:
+1. select and rename files as needed;
+2. gg_prepr.py crop (this usually will also anonymize);
+3. gg_prepr.py mask;
+4. manually refine masked images files (i.e. with Gimp);
+5. gg_prepr.py trimap;
+6. rename files to match image<->trimap.
+
 # License
 
 Copyright (C) 2022 Giansalvo Gusinu
