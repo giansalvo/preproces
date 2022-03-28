@@ -32,6 +32,11 @@ COPYRIGHT_NOTICE = "Copyright (C) 2022 Giansalvo Gusinu <profgusinu@gmail.com>"
 PROGRAM_VERSION = "1.0"
 
 # CONSTANTS
+ACTION_ANONYMIZE = "anonymize"
+ACTION_CROP = "crop"
+ACTION_MASK = "mask"
+ACTION_MEASURE = "measure"
+ACTION_TRIMAP = "trimap"
 CROP_X_DEFAULT = 330
 CROP_Y_DEFAULT = 165
 CROP_W_DEFAULT = 300
@@ -50,6 +55,12 @@ green_lower = np.array([1, 0, 0])
 green_upper = np.array([80, 255, 255])
 contour_color = (0, 255, 0)  # green contour (BGR)
 fill_color = list(contour_color)
+
+# DIRECTORIES
+SUBDIR_WHITE = "white"
+SUBDIR_CYAN = "cyan"
+SUBDIR_BINARY = "bin"
+SUBDIR_VISIBLE = "visible"
 
 def measure_area(image_rgb, color_rgb):
     # Find all pixels where the 3 RGB values match "color", and count them
@@ -223,14 +234,14 @@ def fill_contours_all_files(input_directory, output_directory):
 
             # white contours
             img_filled = fill_contours_white(input_directory + "/" + fname)
-            # # Measure the area
-            # area = measure_area(cv2.cvtColor(img_filled, cv2.COLOR_BGR2RGB), fill_color)
-            # put_text(img_filled, "Area=" + str(area) + " px")
-            # Save file with text
-            cv2.imwrite(output_directory + "/" + fn + "_white" + fext, img_filled, [int(cv2.IMWRITE_JPEG_QUALITY), 100])  # TODO check JPEG/PNG
-
+            # Save the file
+            subdir = output_directory + "/" + SUBDIR_WHITE + "/"
+            cv2.imwrite(subdir + fn + ".png", img_filled, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+            # cyan contours
             img_filled = fill_contours_cyan(input_directory + "/" + fname)
-            cv2.imwrite(output_directory + "/" + fn + "_cyan" + fext, img_filled, [int(cv2.IMWRITE_JPEG_QUALITY), 100])  # TODO check JPEG/PNG
+            # Save the file
+            subdir = output_directory + "/" + SUBDIR_CYAN + "/"
+            cv2.imwrite(subdir + fn + ".png", img_filled, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
     return
 
 
@@ -240,10 +251,12 @@ def generate_trimaps_all_files(input_directory, output_directory):
         if fname.endswith(ext):
             fn, fext = os.path.splitext(os.path.basename(fname))
             img_visible, img_binary = generate_trimap(input_directory + "/" + fname)
-            cv2.imwrite(output_directory + "/" + fn + fext, img_visible, [int(cv2.IMWRITE_JPEG_QUALITY), 100])  # TODO check JPEG/PNG
-            cv2.imwrite(output_directory + "/" + fn + "_bin" + fext, img_binary, [int(cv2.IMWRITE_JPEG_QUALITY), 100])  # TODO check JPEG/PNG
-            # cv2.imwrite(output_directory + "/" + fn + ".png", img,  [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+            subdir = output_directory + "/" + SUBDIR_VISIBLE + "/"
+            cv2.imwrite(subdir + fn + ".png", img_visible, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+            subdir = output_directory + "/" + SUBDIR_BINARY + "/"
+            cv2.imwrite(subdir + fn + ".png", img_binary, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
     return
+
 
 def generate_trimap(fname, erosion_iter=6, dilate_iter=6):
     mask = cv2.imread(fname, 0)
@@ -268,6 +281,7 @@ def generate_trimap(fname, erosion_iter=6, dilate_iter=6):
     labels[trimap == 255] = 2  # foreground
     return trimap, labels
 
+
 def anonymize_all_files(input_directory, output_directory, 
                 x=ANONYMIZE_X_DEFAULT, y=ANONYMIZE_X_DEFAULT, 
                 w=ANONYMIZE_W_DEFAULT, h=ANONYMIZE_H_DEFAULT):
@@ -277,8 +291,7 @@ def anonymize_all_files(input_directory, output_directory,
             fn, fext = os.path.splitext(os.path.basename(fname))
             img = cv2.imread(input_directory + "/" + fname)
             img = anonimize(img, x, y, w, h)
-            cv2.imwrite(output_directory + "/" + fn + fext, img, [int(cv2.IMWRITE_JPEG_QUALITY), 100])  # TODO check JPEG/PNG
-            # cv2.imwrite(output_directory + "/" + fn + ".png", img,  [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+            cv2.imwrite(output_directory + "/" + fn + ".png", img,  [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
     return
 
 def crop_all_files(input_directory, output_directory, 
@@ -289,8 +302,7 @@ def crop_all_files(input_directory, output_directory,
             fn, fext = os.path.splitext(os.path.basename(fname))
             img = cv2.imread(input_directory + "/" + fname)
             img = img[y:y+h, x:x+w]
-            cv2.imwrite(output_directory + "/" + fn + fext, img, [int(cv2.IMWRITE_JPEG_QUALITY), 100])  # TODO check JPEG/PNG
-            # cv2.imwrite(output_directory + "/" + fn + ".png", img,  [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+            cv2.imwrite(output_directory + "/" + fn + ".png", img,  [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
     return
 
 
@@ -308,7 +320,7 @@ def measure_all_files(input_directory, output_file, coeff_m=1.0, coeff_q=0.0):
                 # a4 = np.sum(non_black_pixels_mask)
 
                 # Measure the area
-                #img2 = scipy.ndimage.imread(filename)   # IS THIS FASTER? another way with scipy lib
+                # img2 = scipy.ndimage.imread(filename)   # IS THIS FASTER? another way with scipy lib
                 img_bn = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 number_of_black_pix = np.sum(img_bn == 0)
                 area_pixels = img.shape[0]*img.shape[1]-number_of_black_pix  # DEBUG IS THIS RELIABLE?
@@ -319,12 +331,6 @@ def measure_all_files(input_directory, output_file, coeff_m=1.0, coeff_q=0.0):
 
 
 #  main
-action_anonymize = "anonymize"
-action_crop = "crop"
-action_mask = "mask"
-action_measure = "measure"
-action_trimap = "trimap"
-
 parser = argparse.ArgumentParser(
     description=COPYRIGHT_NOTICE,
     epilog="Examples:\n"
@@ -345,8 +351,8 @@ group = parser.add_mutually_exclusive_group()
 group.add_argument("-v", "--verbose", action="store_true")
 group.add_argument("-q", "--quiet", action="store_true")
 parser.add_argument("action", help="The action: " 
-        + action_anonymize + action_crop + ", " + action_mask + ", " + action_measure + ", " + action_trimap,
-        choices=(action_anonymize, action_crop, action_mask, action_measure, action_trimap))
+        + ACTION_ANONYMIZE + ", " + ACTION_CROP + ", " + ACTION_MASK + ", " + ACTION_MEASURE + ", " + ACTION_TRIMAP,
+        choices=(ACTION_ANONYMIZE, ACTION_CROP, ACTION_MASK, ACTION_MEASURE, ACTION_TRIMAP))
 parser.add_argument('-i', '--input_dir', required=True, help="The directory with the input images")
 parser.add_argument("-o", "--output_dir", required=False, help="The directory with the resulting images")
 parser.add_argument("-mf", "--measure_file", required=False, help="The file where to store measures")
@@ -363,12 +369,12 @@ print(COPYRIGHT_NOTICE)
 print("Program started.")
 if args.action is None:
         parser.error("Missing parameter action. It must be one of: " 
-                    + action_crop + action_mask + action_measure + action_trimap)
+                    + ACTION_CROP + ACTION_MASK + ACTION_MEASURE + ACTION_TRIMAP)
 
 if not os.path.isdir(input_dir):
     print("Error: input directory " + input_dir + " doesn't exist!")    
     exit()
-if args.action == action_anonymize or args.action == action_crop or args.action == action_mask or args.action == action_trimap:
+if args.action == ACTION_ANONYMIZE or args.action == ACTION_CROP or args.action == ACTION_MASK or args.action == ACTION_TRIMAP:
     if args.output_dir is None:
         parser.error("Missing output directory.")
     if os.path.isdir(output_dir):
@@ -376,8 +382,22 @@ if args.action == action_anonymize or args.action == action_crop or args.action 
     else:
         print("Creating output directory " + output_dir)
         os.mkdir(output_dir)
+    if args.action == ACTION_MASK:
+        subdir = output_dir + "/" + SUBDIR_WHITE
+        print("Creating output subdirectory " + subdir)
+        os.mkdir(subdir)
+        subdir = output_dir + "/" + SUBDIR_CYAN
+        print("Creating output subdirectory " + subdir)
+        os.mkdir(subdir)
+    if args.action == ACTION_TRIMAP:
+        subdir = output_dir + "/" + SUBDIR_VISIBLE
+        print("Creating output subdirectory " + subdir)
+        os.mkdir(subdir)
+        subdir = output_dir + "/" + SUBDIR_BINARY
+        print("Creating output subdirectory " + subdir)
+        os.mkdir(subdir)
 
-if args.action == action_anonymize:
+if args.action == ACTION_ANONYMIZE:
     print("Generating anonymized images for all files in the input directory...")
     if args.x is None:
         x_coord = ANONYMIZE_X_DEFAULT
@@ -396,7 +416,7 @@ if args.action == action_anonymize:
     else:
         heigth = args.heigth
     anonymize_all_files(input_dir, output_dir, x_coord, y_coord, weigth, heigth)
-elif args.action == action_crop:
+elif args.action == ACTION_CROP:
     print("Generating cropped images for all files in the input directory...")
     if args.x is None:
         x_coord = CROP_X_DEFAULT
@@ -415,15 +435,15 @@ elif args.action == action_crop:
     else:
         heigth = args.heigth
     crop_all_files(input_dir, output_dir, x_coord, y_coord, weigth, heigth)
-elif args.action == action_mask:
+elif args.action == ACTION_MASK:
     print("Generating visible masks (green on black) for all images in the input directory...")
     fill_contours_all_files(input_dir, output_dir)
-elif args.action == action_measure:
+elif args.action == ACTION_MEASURE:
     if args.measure_file is None:
         parser.error("Missing measure file.")
     print("Generating measures of the areas for all images in the input directory...")
     measure_all_files(input_dir, args.measure_file)
-elif args.action == action_trimap:
+elif args.action == ACTION_TRIMAP:
     print("Generating trimaps for all images in the input directory...")
     generate_trimaps_all_files(input_dir, output_dir)
 
