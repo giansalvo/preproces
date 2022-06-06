@@ -45,6 +45,9 @@ ANONYMIZE_X_DEFAULT = 0
 ANONYMIZE_Y_DEFAULT = 0
 ANONYMIZE_W_DEFAULT = 1240
 ANONYMIZE_H_DEFAULT = 100
+VALUE_FOREGROUND    = 1
+VALUE_BORDER        = 2
+VALUE_BACKGROUND    = 3
 
 # COLOUR MASKS
 cyan_lower = np.array([34, 85, 30])
@@ -247,14 +250,17 @@ def fill_contours_all_files(input_directory, output_directory):
 
 def generate_trimaps_all_files(input_directory, output_directory):
     ext = ('.jpg', '.jpeg', '.png')
+    print("input direcotry: " + input_directory)
     for fname in os.listdir(input_directory):
+        print(fname)
         if fname.endswith(ext):
             fn, fext = os.path.splitext(os.path.basename(fname))
-            img_visible, img_binary = generate_trimap(input_directory + "/" + fname)
-            subdir = output_directory + "/" + SUBDIR_VISIBLE + "/"
-            cv2.imwrite(subdir + fn + ".png", img_visible, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-            subdir = output_directory + "/" + SUBDIR_BINARY + "/"
-            cv2.imwrite(subdir + fn + ".png", img_binary, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+            fpath = os.path.join(input_directory, fname)
+            img_visible, img_binary = generate_trimap(fpath)
+            fpath = os.path.join(output_directory, SUBDIR_VISIBLE, fn + ".png")
+            cv2.imwrite(fpath, img_visible, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+            fpath = os.path.join(output_directory, SUBDIR_BINARY, fn + ".png")
+            cv2.imwrite(fpath, img_binary, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
     return
 
 
@@ -277,8 +283,9 @@ def generate_trimap(fname, erosion_iter=6, dilate_iter=6):
     # cv2.imwrite("dilate.png",dilate)
     # cv2.imwrite("tri.png",trimap)
     labels = trimap.copy()
-    labels[trimap == 127] = 1  # unknown
-    labels[trimap == 255] = 2  # foreground
+    labels[trimap == 0]     = VALUE_BACKGROUND
+    labels[trimap == 127]   = VALUE_BORDER
+    labels[trimap == 255]   = VALUE_FOREGROUND
     return trimap, labels
 
 
