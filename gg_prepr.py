@@ -283,9 +283,17 @@ def generate_trimap(fname, erosion_iter=6, dilate_iter=6):
     # cv2.imwrite("dilate.png",dilate)
     # cv2.imwrite("tri.png",trimap)
     labels = trimap.copy()
+    # print("Annotations before values' conversions:")
+    # for i in range(256):
+    #     n = np.sum(labels == i)
+    #     print("number of {}={}".format(i, n))
     labels[trimap == 0]     = VALUE_BACKGROUND
     labels[trimap == 127]   = VALUE_BORDER
-    labels[trimap == 255]   = VALUE_FOREGROUND
+    labels[trimap == 255]   = VALUE_FOREGROUND   
+    # print("Annotations after values' conversions:")
+    # for i in range(256):
+    #     n = np.sum(labels == i)
+    #     print("number of {}={}".format(i, n))
     return trimap, labels
 
 
