@@ -344,6 +344,45 @@ def measure_all_files(input_directory, output_file, coeff_m=1.0, coeff_q=0.0):
                 f.write(line)
     return
 
+def compute_imbalance(input_directory, output_file, n_classes=3):
+    ext = ('.jpg', '.jpeg', '.png')
+    npix_tot = np.empty(n_classes)
+    npix = np.empty(n_classes)
+    with open(output_file, 'w') as f:
+        f.write("file_name")
+        for i in range(n_classes):
+            npix_tot[i] = 0
+            f.write(", classes_{}".format(i))
+        f.write("\n")
+
+        for fname in os.listdir(input_directory):
+            if fname.endswith(ext):
+                fn, fext = os.path.splitext(os.path.basename(fname))
+                img = cv2.imread(input_directory + "/" + fname, cv2.IMREAD_GRAYSCALE)
+
+                # black_pixels_mask = np.all(img == [0, 0, 0], axis=-1)
+                # non_black_pixels_mask = ~black_pixels_mask
+                # a4 = np.sum(non_black_pixels_mask)
+
+                # Measure the area
+                # img2 = scipy.ndimage.imread(filename)   # IS THIS FASTER? another way with scipy lib
+                # img_bn = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+                line = fname
+                for i in range(n_classes):
+                    npix[i] = np.sum(img == i)
+                    npix_tot[i] += npix[i]
+                    line = line + ", " + "{:n}".format(npix[i])
+                line = line + "\n"
+                f.write(line)
+        line = "total:"
+        for i in range(n_classes):
+            line = line + ", " + "{:n}".format(npix_tot[i])
+        line = line + "\n"
+        f.write(line)
+    return
+
+
 
 #  main
 parser = argparse.ArgumentParser(
@@ -357,7 +396,7 @@ parser = argparse.ArgumentParser(
            "\n"
            "         >python %(prog)s mask -i images_cropped -o images_masks\n"
            "\n"
-           "         >python %(prog)s measure -i images_masks -mf measures.txt\n"
+           "         >python %(prog)s measure -i images_trimap -mf measures.txt\n"
            "\n"
            "         >python %(prog)s trimap -i images_masks -o images_trimap\n",
             formatter_class=argparse.RawTextHelpFormatter)
@@ -457,7 +496,8 @@ elif args.action == ACTION_MEASURE:
     if args.measure_file is None:
         parser.error("Missing measure file.")
     print("Generating measures of the areas for all images in the input directory...")
-    measure_all_files(input_dir, args.measure_file)
+    # measure_all_files(input_dir, args.measure_file)
+    compute_imbalance(input_dir, args.measure_file, 6)
 elif args.action == ACTION_TRIMAP:
     print("Generating trimaps for all images in the input directory...")
     generate_trimaps_all_files(input_dir, output_dir)
