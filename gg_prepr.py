@@ -346,14 +346,14 @@ def measure_all_files(input_directory, output_file, coeff_m=1.0, coeff_q=0.0):
 
 def compute_imbalance(input_directory, output_file, n_classes=3):
     ext = ('.jpg', '.jpeg', '.png')
-    npix_tot = np.empty(n_classes)
-    npix = np.empty(n_classes)
+    npix_tot = np.empty(n_classes, dtype=int)
+    npix = np.empty(n_classes, dtype=int)
     with open(output_file, 'w') as f:
         f.write("file_name")
         for i in range(n_classes):
             npix_tot[i] = 0
             f.write(", classes_{}".format(i))
-        f.write("\n")
+        f.write(", total\n")
 
         for fname in os.listdir(input_directory):
             if fname.endswith(ext):
@@ -369,16 +369,20 @@ def compute_imbalance(input_directory, output_file, n_classes=3):
                 # img_bn = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
                 line = fname
+                tot = 0
                 for i in range(n_classes):
                     npix[i] = np.sum(img == i)
+                    tot += npix[i]
                     npix_tot[i] += npix[i]
-                    line = line + ", " + "{:n}".format(npix[i])
-                line = line + "\n"
+                    line = line + ", " + "{:d}".format(npix[i])
+                line = line + ", " + "{:d}".format(tot) + "\n"
                 f.write(line)
         line = "total:"
+        tot = 0
         for i in range(n_classes):
-            line = line + ", " + "{:n}".format(npix_tot[i])
-        line = line + "\n"
+            tot += npix_tot[i]
+            line = line + ", " + "{:d}".format(npix_tot[i])
+        line = line + ", " + "{:d}".format(tot) + "\n"
         f.write(line)
     return
 
