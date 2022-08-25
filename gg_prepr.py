@@ -37,6 +37,7 @@ ACTION_CROP = "crop"
 ACTION_MASK = "mask"
 ACTION_MEASURE = "measure"
 ACTION_TRIMAP = "trimap"
+ACTION_IMBALANCE = "imbalance"
 CROP_X_DEFAULT = 330
 CROP_Y_DEFAULT = 165
 CROP_W_DEFAULT = 300
@@ -392,25 +393,26 @@ def compute_imbalance(input_directory, output_file, n_classes=3):
 parser = argparse.ArgumentParser(
     description=COPYRIGHT_NOTICE,
     epilog="Examples:\n"
-           "         >python %(prog)s anonymize -i images_original -o images_anonym\n"
-           "         >python %(prog)s anonymize -i images_original -o images_anonym -x=0 -y=0 -w=640 -hi=100\n"
+           "         $python %(prog)s anonymize -i images_original -o images_anonym\n"
+           "         $python %(prog)s anonymize -i images_original -o images_anonym -x=0 -y=0 -w=640 -hi=100\n"
            "\n"
-           "         >python %(prog)s crop -i images_original -o images_cropped\n"
-           "         >python %(prog)s crop -i images_original -o images_cropped -x=330 -y=165 -w=300 -hi=300\n"
+           "         $python %(prog)s crop -i images_original -o images_cropped\n"
+           "         $python %(prog)s crop -i images_original -o images_cropped -x=330 -y=165 -w=300 -hi=300\n"
            "\n"
-           "         >python %(prog)s mask -i images_cropped -o images_masks\n"
+           "         $python %(prog)s mask -i images_cropped -o images_masks\n"
            "\n"
-           "         >python %(prog)s measure -i images_trimap -mf measures.txt\n"
+           "         $python %(prog)s measure -i images_trimap -mf measures.txt\n"
            "\n"
-           "         >python %(prog)s trimap -i images_masks -o images_trimap\n",
+           "         $python %(prog)s trimap -i images_masks -o images_trimap\n"
+           "\n"
+           "         $python %(prog)s imbalance -i images -mf imbalance.txt\n",
             formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('--version', action='version', version='%(prog)s v.' + PROGRAM_VERSION)
 group = parser.add_mutually_exclusive_group()
 group.add_argument("-v", "--verbose", action="store_true")
 group.add_argument("-q", "--quiet", action="store_true")
-parser.add_argument("action", help="The action: " 
-        + ACTION_ANONYMIZE + ", " + ACTION_CROP + ", " + ACTION_MASK + ", " + ACTION_MEASURE + ", " + ACTION_TRIMAP,
-        choices=(ACTION_ANONYMIZE, ACTION_CROP, ACTION_MASK, ACTION_MEASURE, ACTION_TRIMAP))
+parser.add_argument("action", required=True,help="The action to be executed.",
+        choices=(ACTION_ANONYMIZE, ACTION_CROP, ACTION_MASK, ACTION_MEASURE, ACTION_TRIMAP, ACTION_IMBALANCE))
 parser.add_argument('-i', '--input_dir', required=True, help="The directory with the input images")
 parser.add_argument("-o", "--output_dir", required=False, help="The directory with the resulting images")
 parser.add_argument("-mf", "--measure_file", required=False, help="The file where to store measures")
@@ -426,8 +428,7 @@ output_dir = args.output_dir
 print(COPYRIGHT_NOTICE)
 print("Program started.")
 if args.action is None:
-        parser.error("Missing parameter action. It must be one of: " 
-                    + ACTION_CROP + ACTION_MASK + ACTION_MEASURE + ACTION_TRIMAP)
+        parser.error("Missing parameter action. Check with parameter --help")
 
 if not os.path.isdir(input_dir):
     print("Error: input directory " + input_dir + " doesn't exist!")    
@@ -500,10 +501,15 @@ elif args.action == ACTION_MEASURE:
     if args.measure_file is None:
         parser.error("Missing measure file.")
     print("Generating measures of the areas for all images in the input directory...")
-    # measure_all_files(input_dir, args.measure_file)
-    compute_imbalance(input_dir, args.measure_file, 6)
+    measure_all_files(input_dir, args.measure_file)
 elif args.action == ACTION_TRIMAP:
     print("Generating trimaps for all images in the input directory...")
     generate_trimaps_all_files(input_dir, output_dir)
+
+elif args.action == ACTION_IMBALANCE:
+    if args.measure_file is None:
+        parser.error("Missing measure file paramenter. Check with --help.")
+    print("Calcuating class imbalance and writing to output file...")
+    compute_imbalance(input_dir, args.measure_file, 6)
 
 print("Program ended.")
