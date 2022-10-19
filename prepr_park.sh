@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/bash 
 # Copyright (C) 2022 Giansalvo Gusinu
 #
 # Permission is hereby granted, free of charge, to any person obtaining a 
