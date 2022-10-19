@@ -37,6 +37,7 @@ ACTION_CROP = "crop"
 ACTION_MASK = "mask"
 ACTION_MEASURE = "measure"
 ACTION_TRIMAP = "trimap"
+ACTION_HEALTHY = "healthy"
 ACTION_IMBALANCE = "imbalance"
 CROP_X_DEFAULT = 330
 CROP_Y_DEFAULT = 165
@@ -396,33 +397,36 @@ def compute_imbalance(input_directory, output_file, n_classes=3):
 parser = argparse.ArgumentParser(
     description=COPYRIGHT_NOTICE,
     epilog="Examples:\n"
-           "         $python %(prog)s anonymize -i images_original -o images_anonym\n"
-           "         $python %(prog)s anonymize -i images_original -o images_anonym -x=0 -y=0 -w=640 -hi=100\n"
+           "         $python %(prog)s anonymize -i images_folder -o anonym_folder\n"
+           "         $python %(prog)s anonymize -i images_folder -o anonym_folder -x=0 -y=0 -w=640 -hi=100\n"
            "\n"
-           "         $python %(prog)s crop -i images_original -o images_cropped\n"
-           "         $python %(prog)s crop -i images_original -o images_cropped -x=330 -y=165 -w=300 -hi=300\n"
+           "         $python %(prog)s crop -i images_folder -o cropped_folder\n"
+           "         $python %(prog)s crop -i images_folder -o cropped_folder -x=330 -y=165 -w=300 -hi=300\n"
            "\n"
-           "         $python %(prog)s mask -i images_cropped -o images_masks\n"
+           "         $python %(prog)s mask -i cropped_folder -o masks_folder\n"
            "\n"
-           "         $python %(prog)s measure -i images_trimap -mf measures.txt\n"
+           "         $python %(prog)s measure -i trimap_folder -mf measures.txt\n"
            "\n"
-           "         $python %(prog)s trimap -i images_masks -o images_trimap -cl 3\n"
+           "         $python %(prog)s trimap -i masks_folder -o trimap_folder -cl 3\n"
            "\n"
-           "         $python %(prog)s imbalance -i images -mf imbalance.txt\n",
+           "         Generate trimap for Healthy Control with given width, height and number of classes:"
+           "         $python %(prog)s healthy -w=width hi=height -cl 3\n"
+           "\n"
+           "         $python %(prog)s imbalance -i trimamp_folder -mf imbalance.txt\n",
             formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('--version', action='version', version='%(prog)s v.' + PROGRAM_VERSION)
 group = parser.add_mutually_exclusive_group()
 group.add_argument("-v", "--verbose", action="store_true")
 group.add_argument("-q", "--quiet", action="store_true")
 parser.add_argument("action", help="The action to be executed.",
-        choices=(ACTION_ANONYMIZE, ACTION_CROP, ACTION_MASK, ACTION_MEASURE, ACTION_TRIMAP, ACTION_IMBALANCE))
-parser.add_argument('-i', '--input_dir', required=True, help="The directory with the input images")
+        choices=(ACTION_ANONYMIZE, ACTION_CROP, ACTION_MASK, ACTION_MEASURE, ACTION_TRIMAP, ACTION_IMBALANCE, ACTION_HEALTHY))
+parser.add_argument('-i', '--input_dir', required=False, help="The directory with the input images")
 parser.add_argument("-o", "--output_dir", required=False, help="The directory with the resulting images")
 parser.add_argument("-mf", "--measure_file", required=False, help="The file where to store measures")
 parser.add_argument("-x", nargs="?", type=int, help="The starting point (x, y) used for: anonymize, crop.")
 parser.add_argument("-y", nargs="?", type=int, help="The starting point (x, y) used for: anonymize, crop.")
-parser.add_argument("-w", "--weigth", nargs="?", type=int, help="The width parameter is used for: anonymize, crop.")
-parser.add_argument("-hi", "--heigth", nargs="?", type=int, help="The heigth parameter is used for: anonymize, crop.")
+parser.add_argument("-w", "--width", nargs="?", type=int, help="The width parameter is used for: anonymize, crop, healthy.")
+parser.add_argument("-hi", "--height", nargs="?", type=int, help="The height parameter is used for: anonymize, crop, healthy.")
 parser.add_argument("-cl", "--classes", nargs="?", type=int, required=False, help="Number of classes for each pixel in the trimap.")
 args = parser.parse_args()
 
@@ -434,9 +438,14 @@ print("Program started.")
 if args.action is None:
         parser.error("Missing parameter action. Check with parameter --help")
 
-if not os.path.isdir(input_dir):
-    print("Error: input directory " + input_dir + " doesn't exist!")    
-    exit()
+if args.action == ACTION_ANONYMIZE or args.action == ACTION_CROP or args.action == ACTION_MASK or \
+    args.action == ACTION_TRIMAP or args.action == ACTION_MEASURE or args.action == ACTION_IMBALANCE:
+    if input_dir is None:
+        parser.error("Missing input directory.")
+    if not os.path.isdir(input_dir):
+        print("Error: input directory " + input_dir + " doesn't exist!")    
+        exit()
+
 if args.action == ACTION_ANONYMIZE or args.action == ACTION_CROP or args.action == ACTION_MASK or args.action == ACTION_TRIMAP:
     if args.output_dir is None:
         parser.error("Missing output directory.")
@@ -470,15 +479,15 @@ if args.action == ACTION_ANONYMIZE:
         y_coord = ANONYMIZE_Y_DEFAULT
     else:
         y_coord = args.y
-    if args.weigth is None:
-        weigth = ANONYMIZE_W_DEFAULT
+    if args.width is None:
+        width = ANONYMIZE_W_DEFAULT
     else:
-        weigth = args.weigth
-    if args.heigth is None:
-        heigth = ANONYMIZE_H_DEFAULT
+        width = args.width
+    if args.height is None:
+        height = ANONYMIZE_H_DEFAULT
     else:
-        heigth = args.heigth
-    anonymize_all_files(input_dir, output_dir, x_coord, y_coord, weigth, heigth)
+        height = args.height
+    anonymize_all_files(input_dir, output_dir, x_coord, y_coord, width, height)
 elif args.action == ACTION_CROP:
     print("Generating cropped images for all files in the input directory...")
     if args.x is None:
@@ -489,15 +498,15 @@ elif args.action == ACTION_CROP:
         y_coord = CROP_Y_DEFAULT
     else:
         y_coord = args.y
-    if args.weigth is None:
-        weigth = CROP_W_DEFAULT
+    if args.width is None:
+        width = CROP_W_DEFAULT
     else:
-        weigth = args.weigth
-    if args.heigth is None:
-        heigth = CROP_H_DEFAULT
+        width = args.width
+    if args.height is None:
+        height = CROP_H_DEFAULT
     else:
-        heigth = args.heigth
-    crop_all_files(input_dir, output_dir, x_coord, y_coord, weigth, heigth)
+        height = args.height
+    crop_all_files(input_dir, output_dir, x_coord, y_coord, width, height)
 elif args.action == ACTION_MASK:
     print("Generating visible masks (green on black) for all images in the input directory...")
     fill_contours_all_files(input_dir, output_dir)
@@ -520,4 +529,19 @@ elif args.action == ACTION_IMBALANCE:
     print("Calcuating class imbalance and writing to output file...")
     compute_imbalance(input_dir, args.measure_file, 6)
 
+elif args.action == ACTION_HEALTHY:
+    n_classes = args.classes
+    width = args.width
+    height = args.height
+    if width is None:
+        parser.error("Missing -w width paramenter. Check syntax with --help.")
+    if height is None:
+        parser.error("Missing -hi height paramenter. Check syntax with --help.")
+    if n_classes is None:
+        parser.error("Missing -cl classes paramenter. Check syntax with --help.")
+
+    fname = "trimap_HC_" + str(width) + "x" + str(height) + "_cl" + str(n_classes) + ".png"
+    print("Saving healthy control trimap to file: " + fname)
+    trimap = np.full(shape=(width, height, 1), fill_value=n_classes, dtype="uint8")
+    cv2.imwrite(fname, trimap, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
 print("Program ended.")
