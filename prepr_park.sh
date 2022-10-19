@@ -191,10 +191,12 @@ cd $2/$FILLED_SUBFOLDER
 # white subfolder
 mv white/I001.png .
 mv white/I002.png .
+mv white/I062.png .
 rm -fdR white
 # cyan subfolder
 rm cyan/I001.png
 rm cyan/I002.png
+rm cyan/I062.png
 mv cyan/*.png .
 rm -fdR cyan
 cd ../..
