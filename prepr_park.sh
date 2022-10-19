@@ -22,6 +22,7 @@
 CLEAN_SUBFOLDER="clean"
 TRACED_SUBFOLDER="traced"
 FILLED_SUBFOLDER="filled"
+TRIMAP_HC_SUBFOLDER="trimap_HC"
 
 if [ -z "$1" ] || [ -z "$2" ]; then
     echo "Syntax error!"
@@ -45,6 +46,7 @@ echo "Creating subfolder of $2..."
 mkdir $2/$CLEAN_SUBFOLDER
 mkdir $2/$TRACED_SUBFOLDER
 mkdir $2/$FILLED_SUBFOLDER
+mkdir $2/$TRIMAP_HC_SUBFOLDER
 
 echo "Copying and renaming clean sample images to $2/$CLEAN_SUBFOLDER..."
 mv $2/I202203011509350013.png $2/$CLEAN_SUBFOLDER/I000.png
@@ -201,8 +203,22 @@ mv cyan/*.png .
 rm -fdR cyan
 cd ../..
 
-#echo "Convert masks from .png to .jpg..."
-#cd $2/$FILLED_SUBFOLDER
-#ls -1 *.png | xargs -n 1 bash -c 'convert "$0" "${0%.png}.jpg"'
+echo "Generating trimap file for Healthy Controls (HC)..."
+python gg_prepr.py healthy -w 960 -hi 720 -cl 2
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I045.png
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I046.png
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I047.png
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I048.png
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I049.png
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I050.png
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I051.png
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I052.png
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I053.png
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I054.png
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I055.png
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I056.png
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I057.png
+#
+cp trimap_HC_960x720_cl2.png $2/TRIMAP_HC_SUBFOLDER/I068.png
 
 echo $(date +%d/%m/%Y)-$(date +%H:%M): script end ----
