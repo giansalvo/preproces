@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # Copyright (C) 2022 Giansalvo Gusinu
 #
 # Permission is hereby granted, free of charge, to any person obtaining a 
@@ -196,4 +196,3 @@ cd ../..
 #ls -1 *.png | xargs -n 1 bash -c 'convert "$0" "${0%.png}.jpg"'
 
 echo $(date +%d/%m/%Y)-$(date +%H:%M): script end ----
-
