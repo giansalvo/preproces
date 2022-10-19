@@ -28,7 +28,7 @@ import cv2
 import numpy as np
 
 # COPYRIGHT NOTICE AND PROGRAM VERSION
-COPYRIGHT_NOTICE = "Copyright (C) 2022 Giansalvo Gusinu <profgusinu@gmail.com>"
+COPYRIGHT_NOTICE = "Copyright (C) 2022 Giansalvo Gusinu"
 PROGRAM_VERSION = "1.0"
 
 # CONSTANTS
@@ -37,6 +37,7 @@ ACTION_CROP = "crop"
 ACTION_MASK = "mask"
 ACTION_MEASURE = "measure"
 ACTION_TRIMAP = "trimap"
+ACTION_IMBALANCE = "imbalance"
 CROP_X_DEFAULT = 330
 CROP_Y_DEFAULT = 165
 CROP_W_DEFAULT = 300
@@ -248,7 +249,7 @@ def fill_contours_all_files(input_directory, output_directory):
     return
 
 
-def generate_trimaps_all_files(input_directory, output_directory):
+def generate_trimaps_all_files(input_directory, output_directory, n_cl=3):
     ext = ('.jpg', '.jpeg', '.png')
     print("input direcotry: " + input_directory)
     for fname in os.listdir(input_directory):
@@ -256,7 +257,7 @@ def generate_trimaps_all_files(input_directory, output_directory):
         if fname.endswith(ext):
             fn, fext = os.path.splitext(os.path.basename(fname))
             fpath = os.path.join(input_directory, fname)
-            img_visible, img_binary = generate_trimap(fpath)
+            img_visible, img_binary = generate_trimap(fpath, n_classes=n_cl)
             fpath = os.path.join(output_directory, SUBDIR_VISIBLE, fn + ".png")
             cv2.imwrite(fpath, img_visible, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
             fpath = os.path.join(output_directory, SUBDIR_BINARY, fn + ".png")
@@ -264,7 +265,7 @@ def generate_trimaps_all_files(input_directory, output_directory):
     return
 
 
-def generate_trimap(fname, erosion_iter=6, dilate_iter=6):
+def generate_trimap(fname, erosion_iter=6, dilate_iter=6, n_classes=3):
     mask = cv2.imread(fname, 0)
     # define a threshold, 128 is the middle of black and white in grey scale
     thresh = 128
@@ -277,7 +278,10 @@ def generate_trimap(fname, erosion_iter=6, dilate_iter=6):
     unknown1 = cv2.bitwise_xor(erode, mask)
     unknown2 = cv2.bitwise_xor(dilate, mask)
     unknowns = cv2.add(unknown1, unknown2)
-    unknowns[unknowns == 255] = 127
+    if n_classes == 2:
+        unknowns[unknowns == 255] = 0
+    else:
+        unknowns[unknowns == 255] = 127
     trimap = cv2.add(mask, unknowns)
     # cv2.imwrite("mask.png",mask)
     # cv2.imwrite("dilate.png",dilate)
@@ -344,30 +348,74 @@ def measure_all_files(input_directory, output_file, coeff_m=1.0, coeff_q=0.0):
                 f.write(line)
     return
 
+def compute_imbalance(input_directory, output_file, n_classes=3):
+    ext = ('.jpg', '.jpeg', '.png')
+    npix_tot = np.empty(n_classes, dtype=int)
+    npix = np.empty(n_classes, dtype=int)
+    with open(output_file, 'w') as f:
+        f.write("file_name")
+        for i in range(n_classes):
+            npix_tot[i] = 0
+            f.write(", classes_{}".format(i))
+        f.write(", total\n")
+
+        for fname in os.listdir(input_directory):
+            if fname.endswith(ext):
+                fn, fext = os.path.splitext(os.path.basename(fname))
+                img = cv2.imread(input_directory + "/" + fname, cv2.IMREAD_GRAYSCALE)
+
+                # black_pixels_mask = np.all(img == [0, 0, 0], axis=-1)
+                # non_black_pixels_mask = ~black_pixels_mask
+                # a4 = np.sum(non_black_pixels_mask)
+
+                # Measure the area
+                # img2 = scipy.ndimage.imread(filename)   # IS THIS FASTER? another way with scipy lib
+                # img_bn = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+                line = fname
+                tot = 0
+                for i in range(n_classes):
+                    npix[i] = np.sum(img == i)
+                    tot += npix[i]
+                    npix_tot[i] += npix[i]
+                    line = line + ", " + "{:d}".format(npix[i])
+                line = line + ", " + "{:d}".format(tot) + "\n"
+                f.write(line)
+        line = "total:"
+        tot = 0
+        for i in range(n_classes):
+            tot += npix_tot[i]
+            line = line + ", " + "{:d}".format(npix_tot[i])
+        line = line + ", " + "{:d}".format(tot) + "\n"
+        f.write(line)
+    return
+
+
 
 #  main
 parser = argparse.ArgumentParser(
     description=COPYRIGHT_NOTICE,
     epilog="Examples:\n"
-           "         >python %(prog)s anonymize -i images_original -o images_anonym\n"
-           "         >python %(prog)s anonymize -i images_original -o images_anonym -x=0 -y=0 -w=640 -hi=100\n"
+           "         $python %(prog)s anonymize -i images_original -o images_anonym\n"
+           "         $python %(prog)s anonymize -i images_original -o images_anonym -x=0 -y=0 -w=640 -hi=100\n"
            "\n"
-           "         >python %(prog)s crop -i images_original -o images_cropped\n"
-           "         >python %(prog)s crop -i images_original -o images_cropped -x=330 -y=165 -w=300 -hi=300\n"
+           "         $python %(prog)s crop -i images_original -o images_cropped\n"
+           "         $python %(prog)s crop -i images_original -o images_cropped -x=330 -y=165 -w=300 -hi=300\n"
            "\n"
-           "         >python %(prog)s mask -i images_cropped -o images_masks\n"
+           "         $python %(prog)s mask -i images_cropped -o images_masks\n"
            "\n"
-           "         >python %(prog)s measure -i images_masks -mf measures.txt\n"
+           "         $python %(prog)s measure -i images_trimap -mf measures.txt\n"
            "\n"
-           "         >python %(prog)s trimap -i images_masks -o images_trimap\n",
+           "         $python %(prog)s trimap -i images_masks -o images_trimap -cl 3\n"
+           "\n"
+           "         $python %(prog)s imbalance -i images -mf imbalance.txt\n",
             formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('--version', action='version', version='%(prog)s v.' + PROGRAM_VERSION)
 group = parser.add_mutually_exclusive_group()
 group.add_argument("-v", "--verbose", action="store_true")
 group.add_argument("-q", "--quiet", action="store_true")
-parser.add_argument("action", help="The action: " 
-        + ACTION_ANONYMIZE + ", " + ACTION_CROP + ", " + ACTION_MASK + ", " + ACTION_MEASURE + ", " + ACTION_TRIMAP,
-        choices=(ACTION_ANONYMIZE, ACTION_CROP, ACTION_MASK, ACTION_MEASURE, ACTION_TRIMAP))
+parser.add_argument("action", help="The action to be executed.",
+        choices=(ACTION_ANONYMIZE, ACTION_CROP, ACTION_MASK, ACTION_MEASURE, ACTION_TRIMAP, ACTION_IMBALANCE))
 parser.add_argument('-i', '--input_dir', required=True, help="The directory with the input images")
 parser.add_argument("-o", "--output_dir", required=False, help="The directory with the resulting images")
 parser.add_argument("-mf", "--measure_file", required=False, help="The file where to store measures")
@@ -375,6 +423,7 @@ parser.add_argument("-x", nargs="?", type=int, help="The starting point (x, y) u
 parser.add_argument("-y", nargs="?", type=int, help="The starting point (x, y) used for: anonymize, crop.")
 parser.add_argument("-w", "--weigth", nargs="?", type=int, help="The width parameter is used for: anonymize, crop.")
 parser.add_argument("-hi", "--heigth", nargs="?", type=int, help="The heigth parameter is used for: anonymize, crop.")
+parser.add_argument("-cl", "--classes", nargs="?", type=int, required=False, help="Number of classes for each pixel in the trimap.")
 args = parser.parse_args()
 
 input_dir = args.input_dir
@@ -383,8 +432,7 @@ output_dir = args.output_dir
 print(COPYRIGHT_NOTICE)
 print("Program started.")
 if args.action is None:
-        parser.error("Missing parameter action. It must be one of: " 
-                    + ACTION_CROP + ACTION_MASK + ACTION_MEASURE + ACTION_TRIMAP)
+        parser.error("Missing parameter action. Check with parameter --help")
 
 if not os.path.isdir(input_dir):
     print("Error: input directory " + input_dir + " doesn't exist!")    
@@ -459,7 +507,17 @@ elif args.action == ACTION_MEASURE:
     print("Generating measures of the areas for all images in the input directory...")
     measure_all_files(input_dir, args.measure_file)
 elif args.action == ACTION_TRIMAP:
+    n_classes = args.classes
+    if n_classes is None:
+        n_classes = 3
     print("Generating trimaps for all images in the input directory...")
-    generate_trimaps_all_files(input_dir, output_dir)
+    print("Classes per pixel: " + str(n_classes))
+    generate_trimaps_all_files(input_dir, output_dir, n_cl=n_classes)
+
+elif args.action == ACTION_IMBALANCE:
+    if args.measure_file is None:
+        parser.error("Missing measure file paramenter. Check with --help.")
+    print("Calcuating class imbalance and writing to output file...")
+    compute_imbalance(input_dir, args.measure_file, 6)
 
 print("Program ended.")
