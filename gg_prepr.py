@@ -542,6 +542,6 @@ elif args.action == ACTION_HEALTHY:
 
     fname = "trimap_HC_" + str(width) + "x" + str(height) + "_cl" + str(n_classes) + ".png"
     print("Saving healthy control trimap to file: " + fname)
-    trimap = np.full(shape=(width, height, 1), fill_value=n_classes, dtype="uint8")
+    trimap = np.full(shape=(height, width, 1), fill_value=n_classes, dtype="uint8")
     cv2.imwrite(fname, trimap, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
 print("Program ended.")
