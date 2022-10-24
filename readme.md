@@ -1,5 +1,5 @@
 # Introduction
-This script allows to do some image preprocessing activities on sonography images taken from Toshiba/Canon Aplio 500 sonography devices.
+This script allows to do some image preprocessing activities on sonography images.
 
 The actions that can be performed are:
 - anonymize;
