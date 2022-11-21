@@ -78,7 +78,7 @@ def anonimize(image, x=ANONYMIZE_X_DEFAULT, y=ANONYMIZE_Y_DEFAULT,
     # Draw black background rectangle in the upper region of the image
     # _, w, _ = image.shape
     # x, y, w, h = 0, 0, w, 40
-    cv2.rectangle(image, (x, x), (x + w, y + h), (0, 0, 0), -1)
+    cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 0), -1)
     return image
 
 
@@ -303,7 +303,7 @@ def generate_trimap(fname, erosion_iter=6, dilate_iter=6, n_classes=3):
 
 
 def anonymize_all_files(input_directory, output_directory, 
-                x=ANONYMIZE_X_DEFAULT, y=ANONYMIZE_X_DEFAULT, 
+                x=ANONYMIZE_X_DEFAULT, y=ANONYMIZE_Y_DEFAULT, 
                 w=ANONYMIZE_W_DEFAULT, h=ANONYMIZE_H_DEFAULT):
     ext = ('.jpg', '.jpeg', '.png')
     for fname in os.listdir(input_directory):
