@@ -39,6 +39,12 @@ fi
 # *** START ***
 echo $(date +%d/%m/%Y)-$(date +%H:%M): Starting script $0
 
+echo "Fix file extension BUG"
+cd $1
+ls -1 *.JPG | xargs -n 1 bash -c 'mv "$0" "${0%.JPG}.jpg_temp"'
+ls -1 *.jpg_temp | xargs -n 1 bash -c 'mv "$0" "${0%.jpg_temp}.jpg"'
+cd ..
+
 echo "Start cropping sample images"
 # python gg_prepr.py anonymize -i "$1" -o "$2" -x=0 -y=0 -w=800 -hi=200
 # # clean bottom of images
@@ -144,7 +150,63 @@ mv $2/"MAB004.png"  $2/$CLEAN_SUBFOLDER/MA004.png
 mv $2/"MAB005.png"  $2/$CLEAN_SUBFOLDER/MA005.png
 mv $2/"MAB006.png"  $2/$CLEAN_SUBFOLDER/MA006.png
 mv $2/"MAB007.png"  $2/$CLEAN_SUBFOLDER/MA007.png
-
+mv $2/"MAB008.png"  $2/$CLEAN_SUBFOLDER/MA008.png
+mv $2/"MAB009.png"  $2/$CLEAN_SUBFOLDER/MA009.png
+#
+mv $2/"MAB011.png"  $2/$CLEAN_SUBFOLDER/MA011.png
+mv $2/"MAB012.png"  $2/$CLEAN_SUBFOLDER/MA012.png
+mv $2/"MAB013.png"  $2/$CLEAN_SUBFOLDER/MA013.png
+mv $2/"MAB014.png"  $2/$CLEAN_SUBFOLDER/MA014.png
+mv $2/"MAB015.png"  $2/$CLEAN_SUBFOLDER/MA015.png
+mv $2/"MAB016.png"  $2/$CLEAN_SUBFOLDER/MA016.png
+#
+mv $2/"MAN017.png"  $2/$CLEAN_SUBFOLDER/MA017.png
+mv $2/"MAN018.png"  $2/$CLEAN_SUBFOLDER/MA018.png
+mv $2/"MAN019.png"  $2/$CLEAN_SUBFOLDER/MA019.png
+mv $2/"MAN020.png"  $2/$CLEAN_SUBFOLDER/MA020.png
+#
+mv $2/"MAB021.png"  $2/$CLEAN_SUBFOLDER/MA021.png
+#
+mv $2/"MAM022.png"  $2/$CLEAN_SUBFOLDER/MA022.png
+#
+mv $2/"MAB023.png"  $2/$CLEAN_SUBFOLDER/MA023.png
+mv $2/"MAB024.png"  $2/$CLEAN_SUBFOLDER/MA024.png
+mv $2/"MAB025.png"  $2/$CLEAN_SUBFOLDER/MA025.png
+#
+mv $2/"MAN026.png"  $2/$CLEAN_SUBFOLDER/MA026.png
+mv $2/"MAN027.png"  $2/$CLEAN_SUBFOLDER/MA027.png
+#
+mv $2/"MAM028.png"  $2/$CLEAN_SUBFOLDER/MA028.png
+#
+mv $2/"MAN029.png"  $2/$CLEAN_SUBFOLDER/MA029.png
+#
+mv $2/"MAB030.png"  $2/$CLEAN_SUBFOLDER/MA030.png
+mv $2/"MAM031.png"  $2/$CLEAN_SUBFOLDER/MA031.png
+#
+mv $2/"MAN032.png"  $2/$CLEAN_SUBFOLDER/MA032.png
+mv $2/"MAN033.png"  $2/$CLEAN_SUBFOLDER/MA033.png
+mv $2/"MAN034.png"  $2/$CLEAN_SUBFOLDER/MA034.png
+mv $2/"MAN035.png"  $2/$CLEAN_SUBFOLDER/MA035.png
+#
+mv $2/"MAB036.png"  $2/$CLEAN_SUBFOLDER/MA036.png
+#
+mv $2/"MAN037.png"  $2/$CLEAN_SUBFOLDER/MA037.png
+#
+mv $2/"MAN038.png"  $2/$CLEAN_SUBFOLDER/MA038.png
+mv $2/"MAN039.png"  $2/$CLEAN_SUBFOLDER/MA039.png
+mv $2/"MAN040.png"  $2/$CLEAN_SUBFOLDER/MA040.png
+#
+mv $2/"MAB041.png"  $2/$CLEAN_SUBFOLDER/MA041.png
+#
+mv $2/"MAM042.png"  $2/$CLEAN_SUBFOLDER/MA042.png
+#
+mv $2/"MAN043.png"  $2/$CLEAN_SUBFOLDER/MA043.png
+#
+mv $2/"MAN045.png"  $2/$CLEAN_SUBFOLDER/MA045.png
+mv $2/"MAN046.png"  $2/$CLEAN_SUBFOLDER/MA046.png
+mv $2/"MAN047.png"  $2/$CLEAN_SUBFOLDER/MA047.png
+mv $2/"MAN048.png"  $2/$CLEAN_SUBFOLDER/MA048.png
+mv $2/"MAN049.png"  $2/$CLEAN_SUBFOLDER/MA049.png
 
 
 echo "Copying and renaming traced images to $2/$TRACED_SUBFOLDER..."
@@ -220,6 +282,35 @@ mv $2/"MAB004.1.png"  $2/$TRACED_SUBFOLDER/MA004.png
 mv $2/"MAB005.1.png"  $2/$TRACED_SUBFOLDER/MA005.png
 mv $2/"MAB006.1.png"  $2/$TRACED_SUBFOLDER/MA006.png
 mv $2/"MAB007.1.png"  $2/$TRACED_SUBFOLDER/MA007.png
+mv $2/"MAB008.1.png"  $2/$TRACED_SUBFOLDER/MA008.png
+mv $2/"MAB009.1.png"  $2/$TRACED_SUBFOLDER/MA009.png
+#
+mv $2/"MAM011.1.png"  $2/$TRACED_SUBFOLDER/MA011.png
+mv $2/"MAB012.1.png"  $2/$TRACED_SUBFOLDER/MA012.png
+mv $2/"MAB013.1.png"  $2/$TRACED_SUBFOLDER/MA013.png
+mv $2/"MAB014.1.png"  $2/$TRACED_SUBFOLDER/MA014.png
+mv $2/"MAB015.1.png"  $2/$TRACED_SUBFOLDER/MA015.png
+mv $2/"MAB016.1.png"  $2/$TRACED_SUBFOLDER/MA016.png
+#
+mv $2/"MAB021.1.png"  $2/$TRACED_SUBFOLDER/MA021.png
+#
+mv $2/"MAM022.1.png"  $2/$TRACED_SUBFOLDER/MA022.png
+#
+mv $2/"MAB023.1.png"  $2/$TRACED_SUBFOLDER/MA023.png
+mv $2/"MAB024.1.png"  $2/$TRACED_SUBFOLDER/MA024.png
+mv $2/"MAB025.1.png"  $2/$TRACED_SUBFOLDER/MA025.png
+#
+mv $2/"MAM028.1.png"  $2/$TRACED_SUBFOLDER/MA028.png
+#
+mv $2/"MAB030.1.png"  $2/$TRACED_SUBFOLDER/MA030.png
+#
+mv $2/"MAM031.1.png"  $2/$TRACED_SUBFOLDER/MA031.png
+#
+mv $2/"MAB036.1.png"  $2/$TRACED_SUBFOLDER/MA036.png
+#
+mv $2/"MAB041.1.png"  $2/$TRACED_SUBFOLDER/MA041.png
+mv $2/"MAM042.1.png"  $2/$TRACED_SUBFOLDER/MA042.png
+
 
 echo "Convert sample images from .png to .jpg..."
 cd $2/$CLEAN_SUBFOLDER
@@ -270,6 +361,31 @@ cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC061.png
 cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC062.png
 ## Marco
 cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA002.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA017.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA018.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA019.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA020.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA026.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA027.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA029.png
+
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA032.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA033.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA034.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA035.png
+#
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA037.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA038.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA039.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA040.png
+#
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA043.png
+#
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA045.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA046.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA047.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA048.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA049.png
 
 
 echo $(date +%d/%m/%Y)-$(date +%H:%M): script end ----
