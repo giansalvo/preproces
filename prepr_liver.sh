@@ -202,6 +202,7 @@ cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA039.png
 cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA040.png
 #
 cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA043.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA044.png
 #
 cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA045.png
 cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA046.png
