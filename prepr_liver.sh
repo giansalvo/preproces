@@ -164,59 +164,59 @@ echo "Generating trimap file for Healthy Controls (HC)..."
 python gg_prepr.py healthy -w 400 -hi 400 -cl 2
 ## Luigi
 cp trimap_HC_400x400_cl2.png $2/$TRIMAP_HC_SUBFOLDER/IXXX.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC046.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC047.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC048.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC049.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC050.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC051.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC052.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC053.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC054.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC055.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC056.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC057.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC058.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC059.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC060.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC061.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/LC062.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC046.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC047.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC048.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC049.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC050.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC051.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC052.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC053.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC054.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC055.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC056.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC057.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC058.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC059.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC060.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC061.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/LC062.png
 ## Marco
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA002.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA017.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA018.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA019.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA020.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA026.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA027.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA029.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA002.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA017.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA018.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA019.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA020.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA026.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA027.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA029.png
 
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA032.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA033.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA034.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA035.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA032.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA033.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA034.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA035.png
 #
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA037.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA038.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA039.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA040.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA037.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA038.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA039.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA040.png
 #
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA043.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA044.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA043.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA044.png
 #
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA045.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA046.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA047.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA048.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA049.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA051.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA052.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA054.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA056.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA058.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA059.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA060.png
-cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/BIN/MA062.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA045.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA046.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA047.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA048.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA049.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA051.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA052.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA054.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA056.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA058.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA059.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA060.png
+cp trimap_HC_400x400_cl2.png $2/$TRIMAP_SUBFOLDER/bin/MA062.png
 
 
 
