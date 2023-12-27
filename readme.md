@@ -76,3 +76,20 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
+
+# Citation
+If you use our code in your project please cite our article:
+
+```
+@article{gusinu2023segmentation,
+  title={Segmentation of Substantia Nigra in Brain Parenchyma Sonographic Images Using Deep Learning},
+  author={Gusinu, Giansalvo and Frau, Claudia and Trunfio, Giuseppe A and Solla, Paolo and Sechi, Leonardo Antonio},
+  journal={Journal of Imaging},
+  volume={10},
+  number={1},
+  pages={1},
+  year={2023},
+  publisher={MDPI}
+}
+
+```
